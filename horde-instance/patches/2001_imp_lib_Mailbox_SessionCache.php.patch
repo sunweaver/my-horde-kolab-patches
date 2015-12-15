@@ -1,0 +1,11 @@
+--- a/imp/lib/Mailbox/SessionCache.php	2014-07-15 22:02:17.000000000 +0000
++++ b/imp/lib/Mailbox/SessionCache.php	2014-07-11 11:03:07.000000000 +0000
+@@ -267,7 +267,7 @@
+             $sm = array(
+                 IMP_Mailbox::SPECIAL_COMPOSETEMPLATES => IMP_Mailbox::getPref(IMP_Mailbox::MBOX_TEMPLATES),
+                 IMP_Mailbox::SPECIAL_DRAFTS => IMP_Mailbox::getPref(IMP_Mailbox::MBOX_DRAFTS),
+-                IMP_Mailbox::SPECIAL_SENT => $injector->getInstance('IMP_Identity')->getAllSentmail(),
++                IMP_Mailbox::SPECIAL_SENT => $injector->getInstance('IMP_Identity')->getSpecialSentmail(),
+                 IMP_Mailbox::SPECIAL_SPAM => IMP_Mailbox::getPref(IMP_Mailbox::MBOX_SPAM),
+                 IMP_Mailbox::SPECIAL_TRASH => $prefs->getValue('use_trash') ? IMP_Mailbox::getPref(IMP_Mailbox::MBOX_TRASH) : null,
+                 IMP_Mailbox::SPECIAL_USER => array()

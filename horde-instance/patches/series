@@ -1,0 +1,5 @@
+2001_imp_lib_Mailbox_SessionCache.php.patch
+2001_imp_lib_Prefs_Identity.php.patch
+2002_kronolith_lib_Event_Kolab.php.patch
+#0001_nag-fix-searching-in-more-than-one-tasklist.patch
+1001_nag-kolab-fix-getChildren-API.patch

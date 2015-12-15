@@ -1,0 +1,53 @@
+--- a/imp/lib/Prefs/Identity.php	2014-07-15 22:02:17.000000000 +0000
++++ b/imp/lib/Prefs/Identity.php	2014-07-11 11:07:09.000000000 +0000
+@@ -559,6 +559,50 @@
+         return IMP_Mailbox::get(array_keys($list));
+     }
+ 
++    /*
++     * Returns true if the given identity's sent-mail folder is marked to appear
++     * in the special folders container.
++     *
++     * @param integer $ident  The identity to check for special sent-mail folder.
++     *
++     * @return boolean  True if the sent-mail folder is special.
++     */
++
++    public function hasSpecialSentmailFolder($ident = null)
++    {
++        if (is_null($ident)) {
++            $ident = $this->getDefault();
++        }
++
++        return $this->getValue('sent_mail_folder_is_special', $ident);
++    }
++
++    /**
++     * Returns an array with the sent-mail mailboxes from those identities
++     * that are marked to show up in the special folder container.
++     *
++     * @return array  The array with the sent-mail IMP_Mailbox objects.
++     */
++    public function getSpecialSentmail()
++    {
++        $list = array();
++
++        foreach (array_keys($this->_identities) as $key) {
++            if ($this->hasSpecialSentmailFolder($key)) {
++                if ($mbox = $this->getValue(IMP_Mailbox::MBOX_SENT, $key)) {
++                    $list[strval($mbox)] = 1;
++                }
++            }
++        }
++
++        if (empty($list))
++        {
++            $list[strval($this->getValue(IMP_Mailbox::MBOX_SENT, $this->getDefault()))] = 1;
++        }
++
++        return IMP_Mailbox::get(array_keys($list));
++    }
++
+     /**
+      * Returns true if the mail should be saved and the user is allowed to.
+      *

@@ -1,0 +1,89 @@
+From 015ee0b907277c419f7697961e7b25e9b190f145 Mon Sep 17 00:00:00 2001
+From: Thomas Jarosch <thomas.jarosch@intra2net.com>
+Date: Tue, 20 Aug 2013 18:16:29 +0200
+Subject: [PATCH] Kolab driver: Fix searching through folders in getByUid()
+ 
+getByUid() was only searching the first tasklist it found.
+The intention of the code was to search all tasklists,
+but there was no code to change the current folder.
+ 
+Also restore a sane state when leaving the function.
+ 
+Bonus points: If the task is found in the first tasklist,
+it does not cost any extra performance.
+ 
+Bug 12591
+---
+ nag/lib/Driver/Kolab.php | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+ 
+Index: horde/nag/lib/Driver/Kolab.php
+===================================================================
+--- horde.orig/nag/lib/Driver/Kolab.php
++++ horde/nag/lib/Driver/Kolab.php
+@@ -43,16 +43,18 @@ class Nag_Driver_Kolab extends Nag_Drive
+     /**
+      * Return the Kolab data handler for the current tasklist.
+      *
++     * @param boolean $force  Force kolab->getData() call (folder might have changed).
++     *
+      * @return Horde_Kolab_Storage_Data The data handler.
+      */
+-    protected function _getData()
++    protected function _getData($force=false)
+     {
+         if (empty($this->_tasklist)) {
+             throw new Nag_Exception(
+                 'The tasklist has been left undefined but is required!'
+             );
+         }
+-        if ($this->_data === null) {
++        if ($this->_data === null || $force) {
+             $this->_data = $this->_getDataForTasklist($this->_tasklist);
+         }
+         return $this->_data;
+@@ -155,6 +157,19 @@ class Nag_Driver_Kolab extends Nag_Drive
+     }
+ 
+ 
++    // Small helper function to change tasklist
++    private function change_tasklist($new_tasklist)
++    {
++        if ($this->_tasklist != $new_tasklist) {
++            $this->_tasklist = $new_tasklist;
++            $this->_data = null;
++
++            if (!empty($this->_tasklist)) {
++                $this->_getData(true);
++            }
++        }
++    }
++
+     /**
+      * Retrieves one task from the database by UID.
+      *
+@@ -164,13 +179,22 @@ class Nag_Driver_Kolab extends Nag_Drive
+      */
+     public function getByUID($uid)
+     {
++        $orig_tasklist = $this->_tasklist;
++
+         foreach (array_keys(Nag::listTasklists(false, Horde_Perms::READ, false)) as $tasklist) {
+-            $this->_tasklist = $tasklist;
++            $this->change_tasklist($tasklist);
++
+             try {
+-                return $this->get(Horde_Url::uriB64Encode($uid));
++                $task = $this->get(Horde_Url::uriB64Encode($uid));
++
++                // if we reach this code, we found the entry
++                $this->change_tasklist($orig_tasklist);
++                return $task;
+             } catch (Horde_Exception_NotFound $e) {
+             }
+         }
++
++        $this->change_tasklist($orig_tasklist);
+         throw new Horde_Exception_NotFound();
+     }
+ 

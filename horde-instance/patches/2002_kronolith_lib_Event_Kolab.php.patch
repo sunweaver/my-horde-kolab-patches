@@ -1,0 +1,11 @@
+--- a/kronolith/lib/Event/Kolab.php	2014-07-16 22:35:04.000000000 +0000
++++ b/kronolith/lib/Event/Kolab.php	2014-07-16 22:35:16.000000000 +0000
+@@ -107,7 +107,7 @@
+         if (isset($event['show-time-as'])) {
+             switch ($event['show-time-as']) {
+                 case 'free':
+-                    $this->status = Kronolith::STATUS_FREE;
++                    $this->status = Kronolith::STATUS_CANCELLED;
+                     break;
+ 
+                 case 'tentative':
