@@ -1,3 +1,16 @@
+Description: Nag_Driver_Kolab: Correctly retrieve tasks from tasklists
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Abstract:
+ Add 1001_nag-kolab-correctly-retrieve-tasklists-regarding-completion-state.patch:
+ .
+ Without this patch, Nag is not able to render tasklists based
+ on the completion or other flags.
+ .   
+ Nag task list tabs (when using the Kolab driver) always show all
+ task, although they should show what the tab title says, e.g.
+ "All tasks", "Incomplete tasks", "Future tasks", "Completed tasks".
+
+
 Index: horde/nag/lib/Driver/Kolab.php
 ===================================================================
 --- horde.orig/nag/lib/Driver/Kolab.php	2015-12-15 20:00:57.000000000 +0100
