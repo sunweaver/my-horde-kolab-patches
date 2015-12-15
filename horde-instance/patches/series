@@ -3,4 +3,4 @@
 2002_kronolith_lib_Event_Kolab.php.patch
 #0001_nag-fix-searching-in-more-than-one-tasklist.patch
 1001_nag-kolab-fix-getChildren-API.patch
-1001_nag-kolab-correctly-retrieve-tasklists-regarding-completion-state.patch
+1002_nag-kolab-correctly-retrieve-tasklists-regarding-completion-state.patch
