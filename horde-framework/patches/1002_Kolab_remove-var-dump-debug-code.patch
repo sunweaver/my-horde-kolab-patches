@@ -1,0 +1,16 @@
+Description: Remove stray var_dump() call from Kolab_Storage_Driver_Pear
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+
+Index: Horde/Kolab/Storage/Driver/Pear.php
+--- Horde.orig/Kolab/Storage/Driver/Pear.php     2015-10-13 00:42:00.000000000 +0000
++++ Horde/Kolab/Storage/Driver/Pear.php       2015-12-03 12:33:26.000000000 +0000
+@@ -227,7 +227,7 @@
+             $this->getBackend()->getAnnotation(
+                 $entry, $type, $this->encodePath($folder)
+             )
+-        );var_dump($result);
++        );
+         foreach ($result as $element) {
+             if (isset($element['ATTRIBUTES'][$type])) {
+                 return $element['ATTRIBUTES'][$type];
+

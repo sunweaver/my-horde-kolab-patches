@@ -1,0 +1,39 @@
+Description: Fix decoding of base64 encoded Kolab (.xml) objects
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Abstract:
+ Kolab XML objects are stored in as MIME attachments in Mails stored
+ on a Kolab server.
+ .
+ If such a MIME attachment is stored in base64 transfer encoding (happens if
+ the Kolab XML objects contain non-7bit characters, e.g. Umlauts), it
+ happens that the code in Kolab_Storage_Object decodes this MIME
+ attachment twice. First decoding step is from base64 to 8bit encoding.
+ Second step takes place in the below patch. If the encoding for
+ Horde_Mime_Part::setContents() is not explicitly set to 8bit there, the
+ encoding type of the previous decoding step (i.e., base64) will be used
+ again.
+ .
+ Without this patch applied, this results in:
+ .
+   * Saving failures of events, tasks, etc. if they contain Umlauts
+     and already contained Umlauts when opening them.
+   * Events, tasks, contacts, etc. not being shown on Kolab shared
+     folders. People that a certain Kolab container (calendar, address book,
+     task list) is shared with, cannot see events, tasks, contacts, if
+     the underlying Kolab XML object's MIME attachment is stored with base64
+     transfer encoding.
+ 
+
+Index: Horde/Kolab/Storage/Object.php
+--- Horde.orig/Kolab/Storage/Object.php  2015-10-13 00:42:00.000000000 +0000
++++ Horde/Kolab/Storage/Object.php    2015-12-16 13:28:44.000000000 +0000
+@@ -375,7 +375,7 @@
+             return;
+         }
+         $this->_mime_part_id = $result[0];
+-        $mime_part->setContents($this->getContent());
++        $mime_part->setContents($this->getContent(), array('encoding' => '8bit'));
+         $result = $data->load($mime_part->getContents(array('stream' => true)), $this);
+         if ($result instanceOf Exception) {
+             $this->addParseError(self::ERROR_INVALID_KOLAB_PART, $result->getMessage());
+

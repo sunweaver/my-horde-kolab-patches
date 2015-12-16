@@ -1,0 +1,23 @@
+Description: Don't save previous object content when saving Kolab (.xml) objects
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Abstract:
+ We observed that saving of base64 encoded Kolab XML objects fails.
+ .
+ The below patch is a work-around that simply skips storing the object's
+ previous state. In Horde's Kolab implementation the 'previous' parameter for
+ saving objects has never been implemented as it seems and does not give any
+ regressions.
+
+Index: Horde/Kolab/Storage/Object/Writer/Format.php
+--- Horde.orig/Kolab/Storage/Object/Writer/Format.php    2015-10-13 00:42:00.000000000 +0000
++++ Horde/Kolab/Storage/Object/Writer/Format.php      2015-12-16 13:27:15.000000000 +0000
+@@ -89,7 +89,7 @@
+     public function save(Horde_Kolab_Storage_Object $object)
+     {
+         try {
+-            return $this->_getParser($object->getType())->save($object->getData(), array('previous' => $object->getCurrentContent()));
++            return $this->_getParser($object->getType())->save($object->getData());
+         } catch (Horde_Kolab_Format_Exception $e) {
+             throw new Horde_Kolab_Storage_Object_Exception(
+                 sprintf('Failed writing the Kolab object: %s', $e->getMessage())
+
