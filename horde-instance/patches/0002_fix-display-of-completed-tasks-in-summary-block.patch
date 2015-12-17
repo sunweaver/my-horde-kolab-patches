@@ -1,0 +1,23 @@
+From 9ca23941877bc20e3bcdd331a11a29dda11b85d3 Mon Sep 17 00:00:00 2001
+From: Michael J Rubinsky <mrubinsk@horde.org>
+Date: Thu, 3 Dec 2015 23:18:54 -0500
+Subject: [PATCH] Fix display of completed tasks in summary block.
+
+---
+ nag/lib/Block/Summary.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/horde/nag/lib/Block/Summary.php b/nag/lib/Block/Summary.php
+index 10aafc7..128ece1 100644
+--- horde.orig/nag/lib/Block/Summary.php
++++ horde/nag/lib/Block/Summary.php
+@@ -184,7 +184,7 @@ protected function _content()
+                     . Horde::img('edit-sidebar-' . substr($task->foregroundColor(), 1) . '.png', $label)
+                     . '</a></td>';
+                 if ($task->completed) {
+-                    $html .= '<td width="1%">' . $style . ''
++                    $html .= '<td width="1%"' . $style . '>'
+                         . Horde::img('checked.png', _("Completed")) . '</td>';
+                 } else {
+                     $label = sprintf(_("Complete \"%s\""), $task->name);
+

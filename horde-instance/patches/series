@@ -5,3 +5,4 @@
 1001_nag-kolab-fix-getChildren-API.patch
 1002_nag-kolab-correctly-retrieve-tasklists-regarding-completion-state.patch
 1004_nag-kolab-fix-storing-parent-id.patch
+0002_fix-display-of-completed-tasks-in-summary-block.patch
