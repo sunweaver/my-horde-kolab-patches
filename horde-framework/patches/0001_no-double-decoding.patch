@@ -1,0 +1,28 @@
+From 9d4c9323bca19cd8d722dbbb882b72390109f3a7 Mon Sep 17 00:00:00 2001
+From: Michael J Rubinsky <mrubinsk@horde.org>
+Date: Mon, 1 Jun 2015 14:36:40 -0400
+Subject: [PATCH] Short circuit the content decoding if it was already done
+ server side.
+
+---
+ framework/Kolab_Storage/lib/Horde/Kolab/Storage/Driver/Imap.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/framework/Kolab_Storage/lib/Horde/Kolab/Storage/Driver/Imap.php b/framework/Kolab_Storage/lib/Horde/Kolab/Storage/Driver/Imap.php
+index cf2072d..fef4683 100644
+--- Horde.orig/Kolab/Storage/Driver/Imap.php
++++ Horde/Kolab/Storage/Driver/Imap.php
+@@ -522,6 +522,13 @@ public function fetchBodypart($folder, $uid, $id)
+                 $query,
+                 array('ids' => new Horde_Imap_Client_Ids($uid))
+             );
++
++            // Already decoded?
++            if ($ret[$uid]->getBodyPartDecode($id)) {
++                return $ret[$uid]->getBodyPart($id, true);
++            }
++
++            // Not already decoded, let Horde_Mime do it.
+             $part = $ret[$uid]->getStructure()->getPart($id);
+             $part->setContents(
+                 $ret[$uid]->getBodyPart($id, true),
