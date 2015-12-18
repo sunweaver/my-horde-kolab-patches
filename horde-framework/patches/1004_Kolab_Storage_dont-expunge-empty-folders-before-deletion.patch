@@ -1,0 +1,18 @@
+Description: Don't try expunging empty folders on folder deletion
+Author: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+
+Index: Horde/Kolab/Storage/Data/Base.php
+===================================================================
+--- Horde.orig/Kolab/Storage/Data/Base.php	2015-12-18 13:27:48.000000000 +0100
++++ Horde/Kolab/Storage/Data/Base.php	2015-12-18 13:26:16.000000000 +0100
+@@ -614,7 +614,9 @@
+                 );
+             }
+         }
+-        $this->deleteBackendIds(array_keys($uids));
++        if (!empty($uids)) {
++            $this->deleteBackendIds(array_keys($uids));
++        }
+         $this->synchronize(
+             array(
+                 'changes' => array(

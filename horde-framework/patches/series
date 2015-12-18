@@ -2,3 +2,4 @@
 1001_Kolab_fix-decoding-of-base64-encoded-kolab-objects.patch
 1002_Kolab_remove-var-dump-debug-code.patch
 1003_Kolab_no-previous-object-storing.patch
+1004_Kolab_Storage_dont-expunge-empty-folders-before-deletion.patch
